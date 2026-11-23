@@ -3,6 +3,36 @@
  "name": "leon.music Mixes",
  "description": "DJ mixes for leon.music servers. Add this hub in your admin panel under DJ Mixes.",
  "apply": "https://github.com/weareleon/leonmusic-mixes/issues/new?template=submit-a-mix.yml",
- "curators": [],
- "mixes": []
+ "curators": [
+  {
+   "name": "itsdefnotleon",
+   "bio": "i am a starter dj who does stupid shit sometimes but also sometimes mix",
+   "url": "https://itsdefnotleon.qzz.io/",
+   "id": "itsdefnotleon",
+   "avatar": "curators/itsdefnotleon/avatar.jpg",
+   "banner": "curators/itsdefnotleon/banner.jpg"
+  }
+ ],
+ "mixes": [
+  {
+   "id": "leons-mini-mix-vol-1",
+   "title": "leons Mini-Mix Vol.1",
+   "dj": "itsdefnotleon",
+   "curator": "itsdefnotleon",
+   "collection": "Mini-Mixes",
+   "year": 2026,
+   "genre": "Dance",
+   "explicit": true,
+   "description": "after learning how to do simple transitions last week, heres my first ever mini-mix featuring tracks from ninajirachi, becky hill, dillon francis and david guetta",
+   "cue": "mixes/leons-mini-mix-vol-1/mix.cue",
+   "audio": {
+    "url": "https://github.com/weareleon/leonmusic-mixes/releases/download/mixes/leons-mini-mix-vol-1.mp3",
+    "size": 27415121,
+    "sha256": "9e0d754e629cb123662182336667f1c7204b515e9c9e2cc9c00da4ebcf47f3f1"
+   },
+   "duration": 1711.128,
+   "tracks": 8,
+   "cover": "mixes/leons-mini-mix-vol-1/cover.jpg"
+  }
+ ]
 }
