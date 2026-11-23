@@ -31,7 +31,17 @@ creators. Only publish mixes you made or have permission to share.
 Prefer to host it yourself? Serve this folder from any web server, for example behind a Cloudflare Tunnel, and leave the
 audio next to `hub.json`. Then build without `--audio-base`.
 
-## Adding a mix
+## Publishing a mix: the easy way
+
+1. Double-click **`Publish a mix.cmd`**. The first time, install the [GitHub CLI](https://cli.github.com) and run
+   `gh auth login`.
+2. Pick the mix's **audio** and **CUE sheet**. The title and DJ are filled in from the CUE sheet, and a cover is made if
+   you don't pick one.
+3. Choose the **curator** (or **+ New curator…**), check the details and press **Publish**.
+
+That's it. The publisher uploads the audio, updates `hub.json` and pushes. The mix is on the hub a minute or two later.
+
+## Adding a mix by hand
 
 1. Create `mixes/<mix-id>/` (lowercase letters, numbers and dashes, e.g. `tl26-alesso-w1`) with:
    - `mix.json`

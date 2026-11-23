@@ -48,6 +48,12 @@ def main():
     a = ap.parse_args()
     root = Path(a.root).resolve()
     cfg = json.loads((root / "hub.config.json").read_text(encoding="utf-8")) if (root / "hub.config.json").exists() else {}
+    old = {}
+    if (root / "hub.json").exists():                      # mixes whose audio was uploaded earlier and isn't on this PC
+        try:
+            old = {m["id"]: m for m in json.loads((root / "hub.json").read_text(encoding="utf-8")).get("mixes", [])}
+        except Exception:
+            old = {}
     hub = {"format": 1, "name": cfg.get("name", "DJ Mixes"), "description": cfg.get("description", ""),
            "apply": cfg.get("apply", ""), "curators": [], "mixes": []}
     problems = []
@@ -69,17 +75,21 @@ def main():
         cue = d / "mix.cue"
         if meta.get("curator") not in curator_ids:
             problems.append(f"{d.name}: curator '{meta.get('curator')}' doesn't exist"); continue
-        if not audio or not cue.exists():
-            problems.append(f"{d.name}: needs an audio file and mix.cue"); continue
-        name = f"{d.name}{audio.suffix.lower()}"
-        url = (a.audio_base.rstrip("/") + "/" + name) if a.audio_base else f"mixes/{d.name}/{audio.name}"
-        m = {"id": d.name, **meta, "cue": f"mixes/{d.name}/mix.cue",
-             "audio": {"url": url, "size": audio.stat().st_size, "sha256": sha256(audio)},
-             "duration": duration(audio), "tracks": cue_tracks(cue)}
+        if not cue.exists():
+            problems.append(f"{d.name}: needs mix.cue"); continue
+        if audio:
+            name = f"{d.name}{audio.suffix.lower()}"
+            url = (a.audio_base.rstrip("/") + "/" + name) if a.audio_base else f"mixes/{d.name}/{audio.name}"
+            info = {"audio": {"url": url, "size": audio.stat().st_size, "sha256": sha256(audio)}, "duration": duration(audio)}
+        elif d.name in old and old[d.name].get("audio"):
+            info = {"audio": old[d.name]["audio"], "duration": old[d.name].get("duration", 0)}
+        else:
+            problems.append(f"{d.name}: needs its audio file (it hasn't been published before)"); continue
+        m = {"id": d.name, **meta, "cue": f"mixes/{d.name}/mix.cue", **info, "tracks": cue_tracks(cue)}
         if (d / "cover.jpg").exists():
             m["cover"] = f"mixes/{d.name}/cover.jpg"
         hub["mixes"].append(m)
-        if a.audio_base:
+        if a.audio_base and audio:
             print(f"  upload {audio}  as  {name}")
     hub["mixes"].sort(key=lambda m: (-(m.get("year") or 0), m["title"].lower()))
     (root / "hub.json").write_text(json.dumps(hub, indent=1, ensure_ascii=False), encoding="utf-8")
