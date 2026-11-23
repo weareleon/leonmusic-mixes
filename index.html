@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>leon.music Mixes</title>
+<meta name="description" content="DJ mixes for leon.music servers.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%23e5282a'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0c0e;--bg2:#141417;--bg3:#1c1c21;--fg:#f4f4f6;--fg2:#a6a6b0;--fg3:#6b6b75;--border:rgba(255,255,255,.08);--accent:#e5282a}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fafafa;--bg2:#fff;--bg3:#f0f0f2;--fg:#111;--fg2:#555;--fg3:#888;--border:rgba(0,0,0,.08)}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:Montserrat,system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header{padding:56px 0 28px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:18px}.brand i{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+h1{font-size:clamp(32px,6vw,56px);font-weight:900;letter-spacing:-2px;margin:18px 0 8px}
+.lead{color:var(--fg2);max-width:640px}
+.add{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.add code{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;word-break:break-all}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:10px 20px;font:700 14px Montserrat,sans-serif;text-decoration:none;border:1px solid var(--border);background:var(--bg3);color:var(--fg);cursor:pointer}
+.btn.pri{background:var(--accent);border-color:transparent;color:#fff}
+section{padding:36px 0}
+h2{font-size:24px;font-weight:900;letter-spacing:-.6px;margin-bottom:16px}
+.cur{display:flex;align-items:center;gap:14px;margin:32px 0 14px}
+.cur img,.cur .ph{width:56px;height:56px;border-radius:50%;object-fit:cover;background:var(--bg3)}
+.cur b{font-size:20px}.cur p{color:var(--fg2);font-size:13px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:20px 16px}
+.mix img,.mix .ph{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;background:var(--bg3);display:block}
+.mix b{display:block;font-size:13px;margin-top:8px;line-height:1.3}
+.mix span{font-size:12px;color:var(--fg2)}
+.e{font-size:9px;font-weight:800;background:var(--fg3);color:var(--bg);border-radius:3px;padding:0 4px;margin-left:4px;vertical-align:2px}
+footer{border-top:1px solid var(--border);padding:28px 0 40px;color:var(--fg3);font-size:12.5px}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}header{padding-top:32px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><i></i>leon.music</div>
+  <h1 id="name">Mixes</h1>
+  <p class="lead" id="desc"></p>
+  <div class="add"><span style="font-weight:700">Add to your server:</span><code id="hubUrl"></code>
+    <button class="btn" id="copy">Copy</button><a class="btn pri" id="apply" href="#">Submit your mix</a></div>
+  <p class="lead" style="font-size:13px;margin-top:12px">In leon.music, open the admin panel → <b>DJ Mixes</b>, paste this address and press <b>Add hub</b>.</p>
+</div></header>
+<main class="wrap"><section id="list"><p class="lead">Loading…</p></section></main>
+<footer><div class="wrap">Every mix here is published with its creator's permission. Want yours on the hub? Use <b>Submit your mix</b>; submissions are reviewed by hand.<br>
+  The hub format is open source: <a href="https://github.com/weareleon/leonmusic-mixes" style="color:inherit">run your own hub</a>.</div></footer>
+<script>
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const base=new URL('hub.json',location.href).href;
+document.getElementById('hubUrl').textContent=new URL('.',location.href).href;
+document.getElementById('copy').onclick=async e=>{try{await navigator.clipboard.writeText(new URL('.',location.href).href);e.target.textContent='Copied ✓';}catch(_){}};
+fetch('hub.json').then(r=>r.json()).then(h=>{
+  document.getElementById('name').textContent=h.name||'Mixes';
+  document.getElementById('desc').textContent=h.description||'';
+  const ap=document.getElementById('apply');if(h.apply)ap.href=h.apply;else ap.remove();
+  const L=document.getElementById('list');L.innerHTML=`<h2>${h.mixes.length} mix${h.mixes.length===1?'':'es'}</h2>`;
+  h.curators.forEach(c=>{
+    const ms=h.mixes.filter(m=>m.curator===c.id);if(!ms.length)return;
+    L.insertAdjacentHTML('beforeend',`<div class="cur">${c.avatar?`<img src="${esc(c.avatar)}" alt="">`:'<div class="ph"></div>'}
+      <div><b>${esc(c.name)}</b><p>${esc(c.bio||'')}</p></div></div>`);
+    const g=document.createElement('div');g.className='grid';L.appendChild(g);
+    ms.forEach(m=>g.insertAdjacentHTML('beforeend',`<div class="mix">${m.cover?`<img src="${esc(m.cover)}" alt="" loading="lazy">`:'<div class="ph"></div>'}
+      <b>${esc(m.title)}${m.explicit?'<span class="e">E</span>':''}</b><span>${esc(m.dj)} · ${m.tracks} songs · ${Math.round((m.duration||0)/60)} min</span></div>`));
+  });
+}).catch(()=>{document.getElementById('list').innerHTML='<p class="lead">Couldn\'t load hub.json.</p>';});
+</script>
+</body>
+</html>

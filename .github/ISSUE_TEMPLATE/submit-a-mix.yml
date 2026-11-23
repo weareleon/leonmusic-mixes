@@ -1,0 +1,76 @@
+name: Submit a DJ mix
+description: Apply to have your mix (or your festival/label's mixes) published on this hub.
+title: "[Mix] "
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for wanting to share your mix! Every submission is reviewed by hand before it goes on the hub.
+        Only submit mixes **you made or have the rights to share**. Don't attach audio here; send a download link instead.
+  - type: input
+    id: dj
+    attributes:
+      label: DJ / artist name
+      description: Shown as the mix's artist.
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Mix title
+      placeholder: "Summer Festival 2026: Your Name at Mainstage (DJ Mix)"
+    validations:
+      required: true
+  - type: input
+    id: curator
+    attributes:
+      label: Curator
+      description: The person, festival, radio show or label the mix is published under. Leave empty to use the DJ's name.
+  - type: input
+    id: collection
+    attributes:
+      label: Collection
+      description: Groups mixes on the curator's page, e.g. "Summer Festival 2026" or "Episodes".
+  - type: input
+    id: genre
+    attributes:
+      label: Genre and year
+      placeholder: "Dance, 2026"
+  - type: checkboxes
+    id: explicit
+    attributes:
+      label: Content
+      options:
+        - label: The mix contains explicit language
+  - type: input
+    id: audio
+    attributes:
+      label: Link to the audio file
+      description: MP3 (320 kbps), M4A, FLAC or OGG, up to 2 GB. Google Drive, Dropbox, WeTransfer and similar are fine.
+    validations:
+      required: true
+  - type: textarea
+    id: cue
+    attributes:
+      label: CUE sheet
+      description: Paste the CUE sheet (TRACK / TITLE / PERFORMER / INDEX 01 mm:ss:ff for every song). Most DJ software can export one.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: cover
+    attributes:
+      label: Link to a square cover image (optional)
+  - type: textarea
+    id: about
+    attributes:
+      label: About you / the curator (optional)
+      description: A short bio, a website, a logo and a wide banner if you have them.
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Rights
+      options:
+        - label: I made this mix or have permission to publish it, and I'm OK with it being shared on leon.music servers.
+          required: true

@@ -1,0 +1,8 @@
+# mix audio goes to GitHub Releases, not git
+mixes/*/*.mp3
+mixes/*/*.m4a
+mixes/*/*.flac
+mixes/*/*.ogg
+mixes/*/*.opus
+mixes/*/*.wav
+mixes/*/*.aac

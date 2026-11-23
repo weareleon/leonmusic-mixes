@@ -1,0 +1,5 @@
+{
+  "name": "leon.music Mixes",
+  "description": "DJ mixes for leon.music servers. Add this hub in your admin panel under DJ Mixes.",
+  "apply": "https://github.com/weareleon/leonmusic-mixes/issues/new?template=submit-a-mix.yml"
+}
